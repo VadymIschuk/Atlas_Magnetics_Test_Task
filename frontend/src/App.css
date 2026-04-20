@@ -1,0 +1,377 @@
+.app-shell {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.hero-panel,
+.panel {
+  background: var(--surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.hero-panel {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background:
+    radial-gradient(circle at top right, rgba(15, 118, 110, 0.16), transparent 40%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(240, 253, 250, 0.96));
+}
+
+.hero-copy {
+  display: grid;
+  gap: 0.875rem;
+  justify-items: start;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-text,
+.panel-hint,
+.job-badge,
+.chart-axis,
+.empty-copy,
+.chart-empty span,
+.metric-card small,
+.status-card span,
+.step-item,
+.chart-labels {
+  color: var(--text-muted);
+}
+
+.panel {
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.panel-heading {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.panel-heading h2 {
+  margin-top: 0.35rem;
+}
+
+.upload-form,
+.status-stack,
+.report-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.upload-dropzone {
+  position: relative;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 0.125rem dashed color-mix(in srgb, var(--accent) 32%, var(--border));
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--accent-soft) 30%, var(--surface));
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-dropzone input {
+  position: absolute;
+  inline-size: 0.0625rem;
+  block-size: 0.0625rem;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.upload-title {
+  color: var(--text-strong);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.upload-subtitle {
+  max-inline-size: 34rem;
+}
+
+.upload-summary {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.file-list,
+.report-tabs,
+.chart-labels {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.file-pill,
+.job-badge,
+.report-tab {
+  border-radius: 999rem;
+  border: 0.0625rem solid var(--border);
+  background: var(--surface-muted);
+  color: var(--text-strong);
+  font: inherit;
+}
+
+.file-pill,
+.job-badge {
+  padding: 0.55rem 0.9rem;
+}
+
+.file-pill {
+  position: relative;
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  padding-inline-end: 1.75rem;
+}
+
+.file-pill__remove {
+  position: absolute;
+  inset-block-start: -0.35rem;
+  inset-inline-end: -0.35rem;
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.2rem;
+  block-size: 1.2rem;
+  padding: 0;
+  border: 0.0625rem solid color-mix(in srgb, var(--accent-dark) 30%, var(--border));
+  border-radius: 50%;
+  background: var(--accent-dark);
+  color: var(--button-text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.file-pill__remove:hover {
+  background: color-mix(in srgb, var(--danger) 80%, var(--accent-dark));
+}
+
+.primary-button,
+.report-tab {
+  padding: 0.75rem 1.2rem;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.primary-button {
+  border: none;
+  border-radius: 999rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--button-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button:hover:not(:disabled),
+.report-tab:hover {
+  transform: translateY(-0.0625rem);
+}
+
+.primary-button:disabled {
+  cursor: progress;
+  opacity: 0.72;
+}
+
+.status-card {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1.125rem 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--surface-muted);
+}
+
+.status-copy,
+.status-progress {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.progress-label {
+  color: var(--text-strong);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.progress-track {
+  inline-size: min(18rem, 100%);
+  block-size: 0.55rem;
+  border-radius: 999rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--accent) 16%, var(--border));
+}
+
+.progress-indicator {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  transform-origin: left;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+}
+
+.step-list {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.step-item::before {
+  content: '';
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 14%, var(--border));
+}
+
+.step-item--active {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.step-item--active::before {
+  background: var(--accent);
+}
+
+.error-banner {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.125rem;
+  border: 0.0625rem solid color-mix(in srgb, var(--danger) 35%, var(--border));
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--danger-soft) 60%, var(--surface));
+  color: var(--danger);
+}
+
+.results-grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+}
+
+.metrics-grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.metric-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--surface-muted);
+}
+
+.metric-card span,
+.metric-card small {
+  font-size: 0.92rem;
+}
+
+.metric-card strong {
+  color: var(--text-strong);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1.1;
+}
+
+.report-tab {
+  cursor: pointer;
+}
+
+.report-tab--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 40%, var(--surface));
+}
+
+.chart-shell,
+.chart-empty {
+  display: grid;
+  gap: 1rem;
+  min-block-size: clamp(16rem, 42vw, 22rem);
+}
+
+.chart-shell {
+  align-content: start;
+}
+
+.chart-svg {
+  inline-size: 100%;
+  block-size: clamp(16rem, 42vw, 22rem);
+  overflow: visible;
+}
+
+.chart-axis-line {
+  stroke: color-mix(in srgb, var(--text-muted) 35%, var(--border));
+  stroke-width: 0.6;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.1;
+}
+
+.chart-point {
+  fill: var(--accent-dark);
+}
+
+.chart-empty {
+  place-items: center;
+  place-content: center;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border-radius: 1.25rem;
+  border: 0.0625rem dashed var(--border);
+  background: var(--surface-muted);
+  text-align: center;
+}
+
+.chart-empty strong {
+  color: var(--text-strong);
+}
+
+@media (max-width: 60rem) {
+  .panel-heading,
+  .status-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
