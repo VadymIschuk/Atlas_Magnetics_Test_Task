@@ -1,25 +1,20 @@
-import type { AppError, JobState } from '../types/job'
+import type { AppError } from '../types/job'
+import { statusSteps } from '../constants/job'
 
 type StatusPanelProps = {
   backendMessage: string | null
   currentJobId: string | null
-  currentState: JobState | null
   currentError: AppError | null
-}
-
-function formatStateLabel(currentState: JobState | null) {
-  if (!currentState) {
-    return 'Ready'
-  }
-
-  return currentState.charAt(0).toUpperCase() + currentState.slice(1)
+  statusMessage: string
+  stepIndex: number | null
 }
 
 export function StatusPanel({
   backendMessage,
   currentJobId,
-  currentState,
   currentError,
+  statusMessage,
+  stepIndex,
 }: StatusPanelProps) {
   return (
     <section className="panel">
@@ -34,10 +29,34 @@ export function StatusPanel({
       <div className="status-stack">
         <div className="status-card">
           <div className="status-copy">
-            <strong>{formatStateLabel(currentState)}</strong>
-            <span>{backendMessage || 'Choose files and start processing to see backend updates.'}</span>
+            <strong>{statusMessage}</strong>
+            <span>{backendMessage || 'Waiting for the next action.'}</span>
+          </div>
+          <div className="status-progress">
+            <span className="progress-label">
+              {stepIndex === null ? 'Ready' : `${stepIndex + 1} / ${statusSteps.length}`}
+            </span>
+            <div className="progress-track" aria-hidden="true">
+              <span
+                className="progress-indicator"
+                style={{
+                  transform: `scaleX(${stepIndex === null ? 0 : (stepIndex + 1) / statusSteps.length})`,
+                }}
+              />
+            </div>
           </div>
         </div>
+
+        <ol className="step-list">
+          {statusSteps.map((step, index) => (
+            <li
+              className={index <= (stepIndex ?? -1) ? 'step-item step-item--active' : 'step-item'}
+              key={step}
+            >
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
 
         {currentError ? (
           <div className="error-banner" role="alert">

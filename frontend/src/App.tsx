@@ -6,7 +6,8 @@ import { ChartPanel } from './components/ChartPanel'
 import { ResultsPanel } from './components/ResultsPanel'
 import { StatusPanel } from './components/StatusPanel'
 import { UploadPanel } from './components/UploadPanel'
-import type { AppError, JobDetails, JobState, JobStatusMessage } from './types/job'
+import { statusSteps } from './constants/job'
+import type { AppError, JobDetails, JobStatusMessage } from './types/job'
 import { mergeSelectedFiles, validateCsvFiles } from './utils/csv'
 
 function buildAppError(error: string, error_code: AppError['error_code']): AppError {
@@ -18,12 +19,13 @@ function App() {
   const [selectedReportIndex, setSelectedReportIndex] = useState(0)
   const [currentJobId, setCurrentJobId] = useState<string | null>(null)
   const [currentJob, setCurrentJob] = useState<JobDetails | null>(null)
-  const [currentState, setCurrentState] = useState<JobState | null>(null)
+  const [statusMessage, setStatusMessage] = useState('Choose one or more CSV files to begin processing.')
   const [backendMessage, setBackendMessage] = useState<string | null>(null)
   const [currentError, setCurrentError] = useState<AppError | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isLoadingResults, setIsLoadingResults] = useState(false)
-  const completionHandledRef = useRef(false)
+  const [stepIndex, setStepIndex] = useState<number | null>(null)
+  const [isRenderingResults, setIsRenderingResults] = useState(false)
+  const completionSequenceStartedRef = useRef(false)
 
   useEffect(() => {
     if (!currentJobId) {
@@ -35,40 +37,56 @@ function App() {
     websocket.onmessage = async (event) => {
       const message = JSON.parse(event.data) as JobStatusMessage
 
-      setCurrentState(message.state)
       setBackendMessage(message.message)
 
       if (message.state === 'failed') {
         setIsSubmitting(false)
-        setIsLoadingResults(false)
+        setIsRenderingResults(false)
         setCurrentJob(null)
+        setStepIndex(null)
+        setStatusMessage(message.error || message.message)
         setCurrentError(buildAppError(message.error || message.message, message.error_code))
-        completionHandledRef.current = false
+        completionSequenceStartedRef.current = false
         websocket.close()
         return
       }
 
-      if (message.state === 'completed' && !completionHandledRef.current) {
+      if (message.state === 'pending' || message.state === 'processing') {
+        setStepIndex(0)
+        setStatusMessage(statusSteps[0])
+      }
+
+      if (message.state === 'completed' && !completionSequenceStartedRef.current) {
         try {
           const jobDetails = await fetchJobDetails(currentJobId)
-          completionHandledRef.current = true
+          completionSequenceStartedRef.current = true
           setIsSubmitting(false)
-          setIsLoadingResults(true)
-          setCurrentState(jobDetails.state)
+          setIsRenderingResults(true)
+          setStepIndex(1)
+          setStatusMessage(statusSteps[1])
           setCurrentJob(jobDetails)
-          setSelectedReportIndex(0)
-          setIsLoadingResults(false)
+
+          window.setTimeout(() => {
+            setStepIndex(2)
+            setStatusMessage(statusSteps[2])
+
+            window.setTimeout(() => {
+              setSelectedReportIndex(0)
+              setIsRenderingResults(false)
+            }, 1000)
+          }, 1000)
         } catch (error) {
           const messageText =
             error instanceof Error ? error.message : 'Failed to load processing results.'
+          setStatusMessage(messageText)
           setCurrentError(buildAppError(messageText, 'processing_error'))
-          setIsLoadingResults(false)
+          setIsRenderingResults(false)
         }
       }
     }
 
     websocket.onerror = () => {
-      if (!completionHandledRef.current) {
+      if (!completionSequenceStartedRef.current) {
         setCurrentError(
           buildAppError(
             'Live status connection failed. Please refresh the page and try again.',
@@ -99,25 +117,25 @@ function App() {
 
     setCurrentJobId(null)
     setCurrentJob(null)
-    setCurrentState('pending')
     setSelectedReportIndex(0)
     setIsSubmitting(true)
-    setIsLoadingResults(false)
+    setIsRenderingResults(false)
     setCurrentError(null)
     setBackendMessage(null)
-    completionHandledRef.current = false
+    setStepIndex(0)
+    setStatusMessage(statusSteps[0])
+    completionSequenceStartedRef.current = false
 
     try {
       const uploadResponse = await createJob(selectedFiles)
       setCurrentJobId(uploadResponse.job_id)
-      setCurrentState(uploadResponse.state)
       setBackendMessage(uploadResponse.message)
     } catch (error) {
       const messageText =
         error instanceof Error ? error.message : 'Failed to upload the selected files.'
       setIsSubmitting(false)
-      setCurrentState('failed')
-      setBackendMessage(null)
+      setStepIndex(null)
+      setStatusMessage(messageText)
       setCurrentError(buildAppError(messageText, 'processing_error'))
     }
   }
@@ -168,13 +186,14 @@ function App() {
         backendMessage={backendMessage}
         currentError={currentError}
         currentJobId={currentJobId}
-        currentState={currentState}
+        statusMessage={statusMessage}
+        stepIndex={stepIndex}
       />
 
       <section className="results-grid">
         <ResultsPanel
           currentJobResults={currentResults}
-          isRenderingResults={isLoadingResults}
+          isRenderingResults={isRenderingResults}
           selectedReportIndex={selectedReportIndex}
           onReportSelect={setSelectedReportIndex}
         />
