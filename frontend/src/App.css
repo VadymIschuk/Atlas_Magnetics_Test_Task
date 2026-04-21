@@ -163,6 +163,18 @@
   background: color-mix(in srgb, var(--danger) 80%, var(--accent-dark));
 }
 
+.file-pill__remove-icon {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+}
+
+.file-pill__remove-icon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+}
+
 .primary-button,
 .report-tab {
   padding: 0.75rem 1.2rem;
@@ -323,27 +335,9 @@
   align-content: start;
 }
 
-.chart-svg {
+.chart-frame {
   inline-size: 100%;
   block-size: clamp(16rem, 42vw, 22rem);
-  overflow: visible;
-}
-
-.chart-axis-line {
-  stroke: color-mix(in srgb, var(--text-muted) 35%, var(--border));
-  stroke-width: 0.6;
-}
-
-.chart-line {
-  fill: none;
-  stroke: var(--accent);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.1;
-}
-
-.chart-point {
-  fill: var(--accent-dark);
 }
 
 .chart-empty {
@@ -358,6 +352,10 @@
 
 .chart-empty strong {
   color: var(--text-strong);
+}
+
+.error-boundary-panel {
+  margin-block: clamp(1.5rem, 5vw, 3rem);
 }
 
 @media (max-width: 60rem) {

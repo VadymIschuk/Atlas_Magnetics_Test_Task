@@ -1,20 +1,38 @@
-import { formatMetricValue } from '../utils/chart'
-import type { FileAnalytics } from '../types/job'
+import { MetricCard } from './MetricCard'
+import type { ResultsPanelProps } from '../types/components'
 
-type ResultsPanelProps = {
-  currentJobResults: FileAnalytics[]
-  isRenderingResults: boolean
-  selectedReportIndex: number
-  onReportSelect: (index: number) => void
+function formatMetricValue(value: number) {
+  return Number.isInteger(value) ? value.toString() : value.toFixed(2)
 }
 
 export function ResultsPanel({
+  activeReport,
   currentJobResults,
   isRenderingResults,
   selectedReportIndex,
   onReportSelect,
 }: ResultsPanelProps) {
-  const activeReport = currentJobResults[selectedReportIndex] ?? null
+  const metrics = activeReport
+    ? [
+        {
+          label: 'Mean',
+          value: formatMetricValue(activeReport.mean),
+        },
+        {
+          label: 'Median',
+          value: formatMetricValue(activeReport.median),
+          hint: activeReport.median_is_approximate ? 'Approximate median' : 'Exact median',
+        },
+        {
+          label: 'Minimum',
+          value: formatMetricValue(activeReport.min),
+        },
+        {
+          label: 'Maximum',
+          value: formatMetricValue(activeReport.max),
+        },
+      ]
+    : []
 
   return (
     <article className="panel panel--results">
@@ -44,25 +62,14 @@ export function ResultsPanel({
 
           {activeReport ? (
             <div className="metrics-grid">
-              <article className="metric-card">
-                <span>Mean</span>
-                <strong>{formatMetricValue(activeReport.mean)}</strong>
-              </article>
-              <article className="metric-card">
-                <span>Median</span>
-                <strong>{formatMetricValue(activeReport.median)}</strong>
-                <small>
-                  {activeReport.median_is_approximate ? 'Approximate median' : 'Exact median'}
-                </small>
-              </article>
-              <article className="metric-card">
-                <span>Minimum</span>
-                <strong>{formatMetricValue(activeReport.min)}</strong>
-              </article>
-              <article className="metric-card">
-                <span>Maximum</span>
-                <strong>{formatMetricValue(activeReport.max)}</strong>
-              </article>
+              {metrics.map((metric) => (
+                <MetricCard
+                  hint={metric.hint}
+                  key={metric.label}
+                  label={metric.label}
+                  value={metric.value}
+                />
+              ))}
             </div>
           ) : null}
         </div>

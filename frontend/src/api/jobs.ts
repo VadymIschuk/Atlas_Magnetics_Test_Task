@@ -1,9 +1,5 @@
 import type { JobDetails, UploadResponse } from '../types/job'
-
-export function buildJobStatusWsUrl(jobId: string) {
-  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-  return `${protocol}://${window.location.host}/ws/jobs/${jobId}`
-}
+import { JOBS_API_PATH } from './constants'
 
 export async function createJob(files: File[]) {
   const formData = new FormData()
@@ -12,7 +8,7 @@ export async function createJob(files: File[]) {
     formData.append('files', file)
   })
 
-  const response = await fetch('/jobs', {
+  const response = await fetch(JOBS_API_PATH, {
     method: 'POST',
     body: formData,
   })
@@ -31,8 +27,8 @@ export async function createJob(files: File[]) {
   return payload as UploadResponse
 }
 
-export async function fetchJobDetails(jobId: string) {
-  const response = await fetch(`/jobs/${jobId}`)
+export async function fetchJobDetails(jobId: string, signal?: AbortSignal) {
+  const response = await fetch(`${JOBS_API_PATH}/${jobId}`, { signal })
   const payload = (await response.json()) as JobDetails
 
   if (!response.ok) {

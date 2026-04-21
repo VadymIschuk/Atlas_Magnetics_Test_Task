@@ -1,8 +1,4 @@
-import type { AppError, ErrorCode } from '../types/job'
-
-function buildAppError(error: string, error_code: ErrorCode | null): AppError {
-  return { error, error_code }
-}
+import { buildAppError } from './app-error'
 
 function parseCsvHeader(headerLine: string): string[] {
   return headerLine
@@ -41,23 +37,4 @@ export async function validateCsvFiles(files: File[]) {
   }
 
   return null
-}
-
-export function mergeSelectedFiles(currentFiles: File[], nextFiles: File[]) {
-  const mergedFiles = [...currentFiles]
-
-  for (const nextFile of nextFiles) {
-    const alreadySelected = mergedFiles.some(
-      (currentFile) =>
-        currentFile.name === nextFile.name &&
-        currentFile.size === nextFile.size &&
-        currentFile.lastModified === nextFile.lastModified,
-    )
-
-    if (!alreadySelected) {
-      mergedFiles.push(nextFile)
-    }
-  }
-
-  return mergedFiles
 }

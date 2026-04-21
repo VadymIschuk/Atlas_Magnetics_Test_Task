@@ -1,13 +1,5 @@
-import type { AppError } from '../types/job'
 import { statusSteps } from '../constants/job'
-
-type StatusPanelProps = {
-  backendMessage: string | null
-  currentJobId: string | null
-  currentError: AppError | null
-  statusMessage: string
-  stepIndex: number | null
-}
+import type { StatusPanelProps } from '../types/components'
 
 export function StatusPanel({
   backendMessage,

@@ -1,12 +1,4 @@
-import type { FormEvent } from 'react'
-
-type UploadPanelProps = {
-  isSubmitting: boolean
-  selectedFiles: File[]
-  onFileSelection: (fileList: FileList | null) => void
-  onFileRemoval: (file: File) => void
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void
-}
+import type { UploadPanelProps } from '../types/components'
 
 export function UploadPanel({
   isSubmitting,
@@ -57,7 +49,14 @@ export function UploadPanel({
                     onClick={() => onFileRemoval(file)}
                     type="button"
                   >
-                    x
+                    <svg
+                      aria-hidden="true"
+                      className="file-pill__remove-icon"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M4 4L12 12" />
+                      <path d="M12 4L4 12" />
+                    </svg>
                   </button>
                 </span>
               ))

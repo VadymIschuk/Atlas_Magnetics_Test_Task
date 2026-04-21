@@ -1,11 +1,63 @@
-import type { FileAnalytics } from '../types/job'
-import { buildChartPath } from '../utils/chart'
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import type { ValueType } from 'recharts/types/component/DefaultTooltipContent'
+import type { ChartPanelProps } from '../types/components'
 
-type ChartPanelProps = {
-  activeReport: FileAnalytics | null
+const chartGridStroke = 'color-mix(in srgb, var(--text-muted) 20%, var(--border))'
+
+const chartTooltipStyle = {
+  border: '0.0625rem solid var(--border)',
+  borderRadius: '0.75rem',
+  background: 'var(--surface)',
+  boxShadow: 'var(--shadow)',
+}
+
+const chartCursorStyle = {
+  stroke: 'var(--accent-dark)',
+  strokeDasharray: '4 4',
+}
+
+const chartMargin = {
+  top: 16,
+  right: 16,
+  left: 0,
+  bottom: 8,
+}
+
+const chartDotStyle = {
+  fill: 'var(--accent-dark)',
+  r: 3,
+}
+
+function formatTooltipValue(value: ValueType | undefined) {
+  return [value ?? '', 'Result'] as const
+}
+
+function formatTooltipLabel(label: string | number, axisField: string) {
+  return `${axisField}: ${label}`
+}
+
+function renderChartEmptyState() {
+  return (
+    <div className="chart-empty">
+      <strong>Chart placeholder</strong>
+      <span>Processed chart data will be rendered here after the backend finishes.</span>
+    </div>
+  )
 }
 
 export function ChartPanel({ activeReport }: ChartPanelProps) {
+  const chartData = activeReport?.chart_data ?? []
+  const hasChartData = chartData.length > 0
+  const chartAxisField = activeReport?.chart_axis_field ?? 'test_id'
+
   return (
     <article className="panel panel--chart">
       <div className="panel-heading">
@@ -20,47 +72,43 @@ export function ChartPanel({ activeReport }: ChartPanelProps) {
         ) : null}
       </div>
 
-      {activeReport?.chart_data.length ? (
+      {hasChartData ? (
         <div className="chart-shell">
-          <svg
-            aria-label="Result chart"
-            className="chart-svg"
-            preserveAspectRatio="none"
-            viewBox="0 0 100 100"
-          >
-            <line className="chart-axis-line" x1="8" x2="8" y1="6" y2="94" />
-            <line className="chart-axis-line" x1="8" x2="96" y1="94" y2="94" />
-            <path className="chart-line" d={buildChartPath(activeReport.chart_data)} />
-            {activeReport.chart_data.map((point, index, collection) => {
-              const minValue = Math.min(...collection.map((item) => item.result))
-              const maxValue = Math.max(...collection.map((item) => item.result))
-              const range = maxValue - minValue || 1
-              const xPosition = (index / Math.max(collection.length - 1, 1)) * 88 + 8
-              const yPosition = 94 - ((point.result - minValue) / range) * 88
-
-              return (
-                <circle
-                  className="chart-point"
-                  cx={xPosition}
-                  cy={yPosition}
-                  key={`${point.x_value}-${index}`}
-                  r="1.2"
+          <div className="chart-frame">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData} margin={chartMargin}>
+                <CartesianGrid stroke={chartGridStroke} vertical={false} />
+                <XAxis
+                  dataKey="x_value"
+                  minTickGap={24}
+                  stroke="var(--text-muted)"
+                  tickLine={false}
                 />
-              )
-            })}
-          </svg>
-
-          <div className="chart-labels">
-            {activeReport.chart_data.slice(0, 6).map((point) => (
-              <span key={`${point.x_value}-${point.result}`}>{point.x_value}</span>
-            ))}
+                <YAxis
+                  dataKey="result"
+                  stroke="var(--text-muted)"
+                  tickLine={false}
+                  width={48}
+                />
+                <Tooltip
+                  contentStyle={chartTooltipStyle}
+                  cursor={chartCursorStyle}
+                  formatter={formatTooltipValue}
+                  labelFormatter={(label) => formatTooltipLabel(label, chartAxisField)}
+                />
+                <Line
+                  dataKey="result"
+                  dot={chartDotStyle}
+                  stroke="var(--accent)"
+                  strokeWidth={2}
+                  type="monotone"
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       ) : (
-        <div className="chart-empty">
-          <strong>Chart placeholder</strong>
-          <span>Processed chart data will be rendered here after the backend finishes.</span>
-        </div>
+        renderChartEmptyState()
       )}
     </article>
   )
