@@ -21,8 +21,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (this.state.hasError) {
       return (
         <main className="app-shell">
-          <section className="panel error-boundary-panel">
-            <div className="panel-heading">
+          <section className="dashboard-panel error-boundary-panel">
+            <div className="dashboard-section-header">
               <div>
                 <p className="eyebrow">Error</p>
                 <h2>Something went wrong</h2>

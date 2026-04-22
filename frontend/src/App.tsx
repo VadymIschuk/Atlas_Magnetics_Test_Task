@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './App.css'
+import './dashboard.css'
 import { ChartPanel, ResultsPanel, StatusPanel, UploadPanel } from './components'
 import { useJobProcessing } from './hooks/useJobProcessing'
 
@@ -27,15 +27,14 @@ function App() {
   const {
     activeReport,
     clearCurrentError,
-    currentResults,
+    jobResults,
     handleReportSelect,
     handleSubmit,
     jobState,
     uiState,
   } = useJobProcessing(selectedFiles)
 
-  function handleFileSelection(fileList: FileList | null) {
-    const nextFiles = fileList ? Array.from(fileList) : []
+  function handleFileSelection(nextFiles: File[]) {
     setSelectedFiles((currentFiles) => mergeSelectedFiles(currentFiles, nextFiles))
     clearCurrentError()
   }
@@ -56,7 +55,7 @@ function App() {
 
   return (
     <main className="app-shell">
-      <header className="hero-panel">
+      <header className="dashboard-hero">
         <div className="hero-copy">
           <h1>CSV Analytics Dashboard</h1>
           <p className="hero-text">
@@ -85,10 +84,10 @@ function App() {
         stepIndex={uiState.stepIndex}
       />
 
-      <section className="results-grid">
+      <section className="dashboard-results-layout">
         <ResultsPanel
           activeReport={activeReport}
-          currentJobResults={currentResults}
+          jobResults={jobResults}
           isRenderingResults={uiState.isRenderingResults}
           selectedReportIndex={uiState.selectedReportIndex}
           onReportSelect={handleReportSelect}

@@ -1,4 +1,4 @@
-import { buildAppError } from './app-error'
+import { createAppError } from './app-error'
 
 function parseCsvHeader(headerLine: string): string[] {
   return headerLine
@@ -9,7 +9,7 @@ function parseCsvHeader(headerLine: string): string[] {
 export async function validateCsvFiles(files: File[]) {
   for (const file of files) {
     if (!file.name.toLowerCase().endsWith('.csv')) {
-      return buildAppError(`File "${file.name}" must have a .csv extension.`, 'invalid_csv_structure')
+      return createAppError(`File "${file.name}" must have a .csv extension.`, 'invalid_csv_structure')
     }
 
     const headerChunk = await file.slice(0, 4096).text()
@@ -19,7 +19,7 @@ export async function validateCsvFiles(files: File[]) {
       .filter(Boolean)
 
     if (!headerLine) {
-      return buildAppError(`File "${file.name}" is empty.`, 'empty_file')
+      return createAppError(`File "${file.name}" is empty.`, 'empty_file')
     }
 
     const headerColumns = parseCsvHeader(headerLine)
@@ -29,7 +29,7 @@ export async function validateCsvFiles(files: File[]) {
     )
 
     if (!hasResultColumn || !hasAxisColumn) {
-      return buildAppError(
+      return createAppError(
         `File "${file.name}" must contain "result" and one of "test_id", "test_name", or "index".`,
         'invalid_columns',
       )

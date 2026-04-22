@@ -4,7 +4,7 @@ import { createJob } from '../api/jobs'
 import { statusSteps } from '../constants/job'
 import type { JobProcessingResult, JobStateModel, UiStateModel } from '../types/app'
 import type { JobStatusMessage } from '../types/job'
-import { buildAppError } from '../utils/app-error'
+import { createAppError } from '../utils/app-error'
 import { validateCsvFiles } from '../utils/csv'
 import { useCompletionSequence } from './useCompletionSequence'
 import { useJobStatusSubscription } from './useJobStatusSubscription'
@@ -61,7 +61,7 @@ export function useJobProcessing(selectedFiles: File[]): JobProcessingResult {
         })
         updateJobState({
           currentJob: null,
-          currentError: buildAppError(message.error || message.message, message.error_code),
+          currentError: createAppError(message.error || message.message, message.error_code),
         })
         return
       }
@@ -102,13 +102,13 @@ export function useJobProcessing(selectedFiles: File[]): JobProcessingResult {
               isRenderingResults: false,
             })
             updateJobState({
-              currentError: buildAppError(messageText, 'processing_error'),
+              currentError: createAppError(messageText, 'processing_error'),
             })
           },
         })
       }
     },
-    [startCompletionSequence],
+    [cancelCompletionSequence, startCompletionSequence],
   )
 
   const handleFallbackStart = useCallback(() => {
@@ -126,7 +126,7 @@ export function useJobProcessing(selectedFiles: File[]): JobProcessingResult {
   async function handleSubmit() {
     if (!selectedFiles.length) {
       updateJobState({
-        currentError: buildAppError('Please choose at least one CSV file before submitting.', null),
+        currentError: createAppError('Please choose at least one CSV file before submitting.', null),
       })
       return
     }
@@ -162,7 +162,7 @@ export function useJobProcessing(selectedFiles: File[]): JobProcessingResult {
         statusMessage: messageText,
       })
       updateJobState({
-        currentError: buildAppError(messageText, 'processing_error'),
+        currentError: createAppError(messageText, 'processing_error'),
       })
     }
   }
@@ -175,13 +175,13 @@ export function useJobProcessing(selectedFiles: File[]): JobProcessingResult {
     updateJobState({ currentError: null })
   }
 
-  const currentResults = jobState.currentJob?.results ?? []
-  const activeReport = currentResults[uiState.selectedReportIndex] ?? null
+  const jobResults = jobState.currentJob?.results ?? []
+  const activeReport = jobResults[uiState.selectedReportIndex] ?? null
 
   return {
     activeReport,
     clearCurrentError,
-    currentResults,
+    jobResults,
     handleReportSelect,
     handleSubmit,
     jobState,

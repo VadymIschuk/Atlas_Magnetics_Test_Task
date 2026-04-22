@@ -7,7 +7,7 @@ function formatMetricValue(value: number) {
 
 export function ResultsPanel({
   activeReport,
-  currentJobResults,
+  jobResults,
   isRenderingResults,
   selectedReportIndex,
   onReportSelect,
@@ -35,18 +35,18 @@ export function ResultsPanel({
     : []
 
   return (
-    <article className="panel panel--results">
-      <div className="panel-heading">
+    <article className="dashboard-panel panel--results">
+      <div className="dashboard-section-header">
         <div>
           <p className="eyebrow">Results</p>
           <h2>Statistical results</h2>
         </div>
       </div>
 
-      {currentJobResults.length ? (
-        <div className="report-stack">
+      {jobResults.length ? (
+        <div className="report-content">
           <div className="report-tabs" role="tablist" aria-label="Uploaded file reports">
-            {currentJobResults.map((report, index) => (
+            {jobResults.map((report, index) => (
               <button
                 className={
                   index === selectedReportIndex ? 'report-tab report-tab--active' : 'report-tab'

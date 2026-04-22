@@ -9,8 +9,8 @@ export function StatusPanel({
   stepIndex,
 }: StatusPanelProps) {
   return (
-    <section className="panel">
-      <div className="panel-heading">
+    <section className="dashboard-panel">
+      <div className="dashboard-section-header">
         <div>
           <p className="eyebrow">Status</p>
           <h2>Status / message area</h2>

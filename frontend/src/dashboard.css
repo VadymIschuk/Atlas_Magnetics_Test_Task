@@ -3,19 +3,19 @@
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
-.hero-panel,
-.panel {
+.dashboard-hero,
+.dashboard-panel {
   background: var(--surface);
   border: 0.0625rem solid var(--border);
   border-radius: 1.5rem;
   box-shadow: var(--shadow);
 }
 
-.hero-panel {
+.dashboard-hero {
   padding: clamp(1.5rem, 3vw, 2.5rem);
   background:
-    radial-gradient(circle at top right, rgba(15, 118, 110, 0.16), transparent 40%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(240, 253, 250, 0.96));
+    radial-gradient(circle at top right, rgb(15 118 110 / 16%), transparent 40%),
+    linear-gradient(135deg, rgb(255 255 255 / 96%), rgb(240 253 250 / 96%));
 }
 
 .hero-copy {
@@ -46,11 +46,11 @@
   color: var(--text-muted);
 }
 
-.panel {
+.dashboard-panel {
   padding: clamp(1.25rem, 2.5vw, 2rem);
 }
 
-.panel-heading {
+.dashboard-section-header {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
@@ -58,13 +58,13 @@
   margin-bottom: 1.5rem;
 }
 
-.panel-heading h2 {
+.dashboard-section-header h2 {
   margin-top: 0.35rem;
 }
 
 .upload-form,
 .status-stack,
-.report-stack {
+.report-content {
   display: grid;
   gap: 1rem;
 }
@@ -80,6 +80,10 @@
   background: color-mix(in srgb, var(--accent-soft) 30%, var(--surface));
   text-align: center;
   cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .upload-dropzone input {
@@ -88,6 +92,12 @@
   block-size: 0.0625rem;
   overflow: hidden;
   opacity: 0;
+}
+
+.upload-dropzone--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 50%, var(--surface));
+  transform: translateY(-0.0625rem);
 }
 
 .upload-title {
@@ -284,7 +294,7 @@
   color: var(--danger);
 }
 
-.results-grid {
+.dashboard-results-layout {
   display: grid;
   gap: clamp(1rem, 2vw, 1.5rem);
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
@@ -359,13 +369,13 @@
 }
 
 @media (max-width: 60rem) {
-  .panel-heading,
+  .dashboard-section-header,
   .status-card {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .results-grid {
+  .dashboard-results-layout {
     grid-template-columns: 1fr;
   }
 

@@ -1,3 +1,5 @@
+import { useDropzone } from 'react-dropzone'
+
 import type { UploadPanelProps } from '../types/components'
 
 export function UploadPanel({
@@ -7,9 +9,20 @@ export function UploadPanel({
   onFileRemoval,
   onSubmit,
 }: UploadPanelProps) {
+  const { getInputProps, getRootProps, isDragActive } = useDropzone({
+    accept: {
+      'text/csv': ['.csv'],
+    },
+    disabled: isSubmitting,
+    multiple: true,
+    onDrop: (acceptedFiles) => {
+      onFileSelection(acceptedFiles)
+    },
+  })
+
   return (
-    <section className="panel">
-      <div className="panel-heading">
+    <section className="dashboard-panel">
+      <div className="dashboard-section-header">
         <div>
           <p className="eyebrow">Upload</p>
           <h2>File upload form</h2>
@@ -18,24 +31,22 @@ export function UploadPanel({
       </div>
 
       <form className="upload-form" onSubmit={onSubmit}>
-        <label className="upload-dropzone" htmlFor="csv-files">
+        <div
+          {...getRootProps({
+            className: isDragActive ? 'upload-dropzone upload-dropzone--active' : 'upload-dropzone',
+          })}
+        >
           <span className="upload-title">Drop CSV files here</span>
-          <span className="upload-subtitle">or click to choose files from your device</span>
+          <span className="upload-subtitle">
+            {isDragActive
+              ? 'Release to add the selected CSV files.'
+              : 'or click to choose files from your device'}
+          </span>
           <span className="upload-subtitle">
             Selecting files again will add them to the current list.
           </span>
-          <input
-            id="csv-files"
-            name="files"
-            type="file"
-            accept=".csv,text/csv"
-            multiple
-            onChange={(event) => {
-              onFileSelection(event.target.files)
-              event.target.value = ''
-            }}
-          />
-        </label>
+          <input {...getInputProps({ name: 'files' })} />
+        </div>
 
         <div className="upload-summary">
           <div className="file-list">

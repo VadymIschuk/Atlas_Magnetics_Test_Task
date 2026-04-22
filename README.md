@@ -1,6 +1,6 @@
 ﻿# Atlas Magnetics Test Task
 
-Backend service built with `FastAPI`, `Celery`, and `Redis`.
+Full-stack CSV analytics app with a `FastAPI` backend and a `React` + `Vite` frontend.
 
 ## What It Does
 
@@ -17,6 +17,9 @@ Backend service built with `FastAPI`, `Celery`, and `Redis`.
 - `Celery` for background processing
 - `Redis` as broker and result backend
 - `pandas` for chunk-based CSV parsing
+- `React` for the frontend UI
+- `Vite` for frontend development and bundling
+- `Recharts` for chart rendering
 
 ## Project Structure
 
@@ -37,6 +40,10 @@ app/
     upload_storage.py
   scripts/
     analytics.py
+frontend/
+  src/
+  package.json
+  vite.config.ts
 ```
 
 ## Environment Variables
@@ -62,8 +69,6 @@ Available settings:
 
 ## Local Run
 
-### Windows
-
 Create and activate a virtual environment:
 
 ```powershell
@@ -85,7 +90,29 @@ Start the worker:
 python -m celery -A app.services.celery_app:celery_app worker --loglevel=info
 ```
 
+### Frontend
 
+Install frontend dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+Start the frontend dev server:
+
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend will be available at:
+
+```text
+http://127.0.0.1:5173
+```
+
+The Vite dev server proxies API and WebSocket requests to `http://localhost:8000`, so the backend API and Celery worker should already be running before you use the UI.
 
 ## API Endpoints
 
@@ -124,5 +151,3 @@ Open Swagger UI:
 ```text
 http://127.0.0.1:8000/docs
 ```
-
-

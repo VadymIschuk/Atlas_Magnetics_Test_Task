@@ -18,7 +18,7 @@ export type UiStateModel = {
 export type JobProcessingResult = {
   activeReport: JobDetails['results'][number] | null
   clearCurrentError: () => void
-  currentResults: JobDetails['results']
+  jobResults: JobDetails['results']
   handleReportSelect: (index: number) => void
   handleSubmit: () => Promise<void>
   jobState: JobStateModel

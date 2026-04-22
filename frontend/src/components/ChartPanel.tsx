@@ -59,8 +59,8 @@ export function ChartPanel({ activeReport }: ChartPanelProps) {
   const chartAxisField = activeReport?.chart_axis_field ?? 'test_id'
 
   return (
-    <article className="panel panel--chart">
-      <div className="panel-heading">
+    <article className="dashboard-panel panel--chart">
+      <div className="dashboard-section-header">
         <div>
           <p className="eyebrow">Chart</p>
           <h2>Chart area</h2>

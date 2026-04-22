@@ -6,7 +6,7 @@ import type { AppError, FileAnalytics } from './job'
 export type UploadPanelProps = {
   isSubmitting: boolean
   selectedFiles: File[]
-  onFileSelection: (fileList: FileList | null) => void
+  onFileSelection: (files: File[]) => void
   onFileRemoval: (file: File) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
 }
@@ -21,7 +21,7 @@ export type StatusPanelProps = {
 
 export type ResultsPanelProps = {
   activeReport: FileAnalytics | null
-  currentJobResults: FileAnalytics[]
+  jobResults: FileAnalytics[]
   isRenderingResults: boolean
   selectedReportIndex: number
   onReportSelect: (index: number) => void
